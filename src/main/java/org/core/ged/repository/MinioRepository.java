@@ -50,6 +50,28 @@ public class MinioRepository {
     }
 
     @SneakyThrows(Exception.class)
+    public String deleteFolder(String folderPath) {
+        log.info("Deleting folder at path: {}", folderPath);
+        Iterable<Result<Item>> results = minioClient.listObjects(
+            ListObjectsArgs.builder()
+                .bucket(minioConfig.getMinioBucketName())
+                .prefix(folderPath)
+                .recursive(true)
+                .build()
+        );
+        for(Result<Item> result : results){
+            Item item = result.get();
+            minioClient.removeObject(
+                RemoveObjectArgs.builder()
+                    .bucket(minioConfig.getMinioBucketName())
+                    .object(item.objectName())
+                    .build()
+            );
+        }
+        return folderPath;
+    }
+
+    @SneakyThrows(Exception.class)
     public String createFile(String folderPath, String fileName, InputStream content, String mimeType){
         String fullPath = (folderPath != null && !folderPath.trim().isEmpty())
             ? folderPath + fileName

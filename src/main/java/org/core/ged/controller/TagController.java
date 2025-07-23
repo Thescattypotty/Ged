@@ -55,7 +55,6 @@ public class TagController {
         @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy,
         @RequestParam(name = "sortDir", defaultValue = "desc") String sortDir,
         TagParams params
-        
     ){
         log.info("Retrieving tags with params: page={}, size={}, sortBy={}, sortDir={}, params={}", page, size, sortBy, sortDir, params);
         Page<TagResponse> tagResponses = tagService.getTags(page, size, sortBy, sortDir, params);
