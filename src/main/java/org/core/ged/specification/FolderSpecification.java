@@ -20,6 +20,11 @@ public class FolderSpecification {
                 predicates = criteriaBuilder.and(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), query));
                 predicates = criteriaBuilder.and(predicates, criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), query));
             }
+
+            if(params.parentsId() != null && !params.parentsId().isEmpty()) {
+                predicates = criteriaBuilder.and(predicates, root.get("parent").get("id").in(params.parentsId()));
+            }
+
             return predicates;
         };
     }
