@@ -25,7 +25,7 @@ public class FolderMapper {
         return new FolderResponse(
             folder.getId().toString(),
             folder.getName(),
-            folder.getParent() != null ? folder.getParent().getId().toString() : null,
+            folder.getParent() != null ? fromFolder(folder.getParent()) : null,
             folder.getDescription(),
             folder.getPath(),
             folder.getCreatedAt().format(formatter),
