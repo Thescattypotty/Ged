@@ -17,8 +17,9 @@ public class FolderSpecification {
 
             if(params.query() != null && !params.query().isBlank()) {
                 String query = "%" + params.query().toLowerCase() + "%";
-                predicates = criteriaBuilder.and(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), query));
-                predicates = criteriaBuilder.and(predicates, criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), query));
+                Predicate namePredicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), query);
+                Predicate descriptionPredicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), query);
+                predicates = criteriaBuilder.and(predicates, criteriaBuilder.or(namePredicate, descriptionPredicate));
             }
 
             if(params.parentsId() != null && !params.parentsId().isEmpty()) {

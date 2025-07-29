@@ -97,8 +97,6 @@ public class FolderService implements IFolderService{
     @Override
     @Transactional(
         propagation = Propagation.SUPPORTS,
-        isolation = Isolation.READ_COMMITTED,
-        timeout = 10,
         readOnly = true
     )
     public FolderResponse getFolder(String id) {
@@ -111,8 +109,6 @@ public class FolderService implements IFolderService{
     @Override
     @Transactional(
         propagation = Propagation.SUPPORTS,
-        isolation = Isolation.READ_COMMITTED,
-        timeout = 10,
         readOnly = true
     )
     public Page<FolderResponse> getAllFolders(int page, int size, String sortBy, String sortDir, FolderParams params) {
@@ -127,5 +123,5 @@ public class FolderService implements IFolderService{
         Page<Folder> folderPage = folderRepository.findAll(specification, pageRequest);
         log.info("Retrieved {} folders", folderPage.getTotalElements());
         return folderPage.map(FolderMapper::fromFolder);
-    }    
+    }
 }
