@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import type { FolderResponse } from "../../types/folders/folder.response";
 import type { Pageable, PageResponse } from "../../types/Page.types";
 import type { FolderParams } from "../../types/folders/folder.params";
-import { getFolders } from "../../services/folder.service";
+import { createFolder, getFolders } from "../../services/folder.service";
 import { DataGrid, type GridColDef, type GridPaginationModel, type GridRenderCellParams, type GridSortModel } from "@mui/x-data-grid";
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { FolderForm } from "./form";
 import type { FolderRequest } from "../../types/folders/folder.request";
+import SearchBar from "./components/searchBar";
 
 export default function FolderList(){
 
@@ -73,7 +74,14 @@ export default function FolderList(){
     };
 
     const handleSubmit = async (folder: FolderRequest) => {
-
+        try {
+            await createFolder(folder);
+            notify("Folder created successfully", "success");
+            loadFolders();
+        } catch (error) {
+            console.error("Error creating folder:", error);
+            notify("Error creating folder", "error");
+        }
     };
 
     const columns: GridColDef<FolderResponse>[] = [
@@ -83,7 +91,7 @@ export default function FolderList(){
             flex: 1
         },
         {
-            field: 'parent.name',
+            field: 'parent',
             headerName: 'Parent',
             flex: 1,
             renderCell: (params: GridRenderCellParams<FolderResponse>) => {
@@ -138,8 +146,10 @@ export default function FolderList(){
                     Create Folder
                 </Button>
             </Typography>
-            <Divider sx={{ m: 2 }} />
-            <Divider sx={{ m: 2 }} />
+            <SearchBar
+                search={params}
+                setSearch={setParams}            
+            />
             <Divider sx={{ m: 2 }} />
             <DataGrid 
                 columns={columns}

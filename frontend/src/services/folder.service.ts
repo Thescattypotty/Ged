@@ -17,7 +17,20 @@ export const getFolders = async (
             size: pageable.size,
             sortBy: pageable.sortBy,
             sortDir: pageable.sortDir,
-            ...params
+            query: params.query,
+            parentsId: params.parentsIds
+        },
+        paramsSerializer: (params) => {
+            const searchParams = new URLSearchParams();
+            for (const key in params) {
+                const value = params[key as keyof typeof params];
+                if (Array.isArray(value)) {
+                    value.forEach((v) => searchParams.append(key, v));
+                } else if (value !== undefined && value !== null) {
+                    searchParams.append(key, String(value));
+                }
+            }
+            return searchParams.toString();
         }
     });
 };

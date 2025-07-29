@@ -109,7 +109,7 @@ export default function SearchBar({
                             if (folders.page.number < folders.page.totalPages - 1) {
                                 setPageable({
                                     ...pageable,
-                                    page: folders.page.number - 1
+                                    page: folders.page.number + 1
                                 });
                             }
                         }}
@@ -133,11 +133,11 @@ export default function SearchBar({
     };
 
     return (
-        <Card variant="outlined" sx={{ width: '100%'}}>
+        <Card variant="outlined" sx={{ width: '100%' }}>
             <CardContent>
                 <Grid container spacing={2} columns={12} sx={{ mb: (theme) => theme.spacing(2) }}>
-                    <FormControl sx={{ width: '40%'}} variant="outlined">
-                        <TextField 
+                    <FormControl sx={{ width: '42%' }} variant="outlined">
+                        <TextField
                             type="text"
                             label="Search Query"
                             value={search.query}
@@ -148,62 +148,61 @@ export default function SearchBar({
                                 });
                             }}
                         />
-                        <FormControl sx={{ width: '56%'}}>
-                            <Autocomplete
-                                id="folder-multi-select"
-                                open={openFolder}
-                                onOpen={() => setOpenFolder(true)}
-                                onClose={() => setOpenFolder(false)}
-                                multiple
-                                value={selectedFolders}
-                                onChange={(_event, newValues) => handleFolderChange(newValues)}
-                                inputValue={folderParams?.query || ''}
-                                onInputChange={(_event, newInputValue) => {
-                                    setFolderParams({
-                                        ...folderParams,
-                                        query: newInputValue
-                                    });
-                                    setPageable({
-                                        ...pageable,
-                                        page: 0
-                                    })
-                                }}
-                                isOptionEqualToValue={(option, value) => option.id === value.id}
-                                getOptionLabel={(option) => option.name || ''}
-                                options={folders.content}
-                                loading={folders.content.length === 0}
-                                noOptionsText="No folders found"
-                                loadingText="Loading folders..."
-                                slotProps={{
-                                    listbox: {
-                                        component: FolderListBoxComponent
-                                    }
-                                }}
-                                renderInput={(params) => (
-                                    <TextField 
-                                        {...params}
-                                        label="Select Folders"
-                                        placeholder="Search folders..."
-                                        variant="outlined"
-                                        slotProps={{
-                                            input: {
-                                                endAdornment: (
-                                                    <>
-                                                        {folders.page.totalElements === 0 ? <CircularProgress color="inherit" size={20} /> : null}
-                                                        {params.InputProps.endAdornment}
-                                                    </>
-                                                )
-                                            }
-                                        }}
-                                    />
-                                )}
-                                sx={{ mt: 0, width: '100%' }}
-                            />
-                        </FormControl>
+                    </FormControl>
+                    <FormControl sx={{ width: '56%' }} variant="outlined">
+                        <Autocomplete
+                            id="folder-multi-select"
+                            open={openFolder}
+                            onOpen={() => setOpenFolder(true)}
+                            onClose={() => setOpenFolder(false)}
+                            multiple
+                            value={selectedFolders}
+                            onChange={(_event, newValues) => handleFolderChange(newValues)}
+                            inputValue={folderParams?.query || ''}
+                            onInputChange={(_event, newInputValue) => {
+                                setFolderParams({
+                                    ...folderParams,
+                                    query: newInputValue
+                                });
+                                setPageable({
+                                    ...pageable,
+                                    page: 0
+                                })
+                            }}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
+                            getOptionLabel={(option) => option.name || ''}
+                            options={folders.content}
+                            loading={folders.page.totalElements === 0}
+                            noOptionsText="No folders found"
+                            loadingText="Loading folders..."
+                            slotProps={{
+                                listbox: {
+                                    component: FolderListBoxComponent
+                                }
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Select Folders"
+                                    placeholder="Search folders..."
+                                    variant="outlined"
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        endAdornment: (
+                                            <>
+                                                {folders.page.totalElements === 0 ? <CircularProgress color="inherit" size={20} /> : null}
+                                                {params.InputProps.endAdornment}
+                                            </>
+                                        ),
+                                    }}
+                                />
+                            )}
+                            sx={{ mt: 0, width: '100%' }}
+                        />
                     </FormControl>
                 </Grid>
             </CardContent>
-            <CardActions sx={{ display: 'flex', justifyContent: 'flex-start'}}>
+            <CardActions sx={{ display: 'flex', justifyContent: 'flex-start' }}>
                 <IconButton
                     color="primary"
                     onClick={() => {
