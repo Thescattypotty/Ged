@@ -1,0 +1,47 @@
+services:
+  postgresql:
+    container_name: ged_pgsql
+    image: postgres:17.0
+    environment:
+      POSTGRES_USER: ged_user
+      POSTGRES_PASSWORD: ged_pass
+      PGDATA: /data/postgres
+    volumes:
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+      - postgres_data:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - ged_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ged_user"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  minio:
+    container_name: ged_minio
+    image: bitnami/minio:latest
+    environment:
+      MINIO_ROOT_USER: administrator
+      MINIO_ROOT_PASSWORD: administrator
+      MINIO_DEFAULT_BUCKET: ged-bucket
+      MINIO_SERVER_URL: http://localhost:9000
+      BITNAMI_DEBUG: "true"
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - ged_network
+    restart: unless-stopped
+volumes:
+  postgres_data:
+  minio_data:
+    driver: local
+networks:
+  ged_network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
