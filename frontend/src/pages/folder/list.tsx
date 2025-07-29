@@ -1,4 +1,4 @@
-import { Box, Divider, IconButton, Stack, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Divider, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import useNotifier from "../../hooks/useNotifier";
 import { useEffect, useState } from "react";
 import type { FolderResponse } from "../../types/folders/folder.response";
@@ -9,6 +9,8 @@ import { DataGrid, type GridColDef, type GridPaginationModel, type GridRenderCel
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { FolderForm } from "./form";
+import type { FolderRequest } from "../../types/folders/folder.request";
 
 export default function FolderList(){
 
@@ -22,6 +24,7 @@ export default function FolderList(){
             totalPages: 0
         }
     });
+    const [openModal, setOpenModal] = useState<boolean>(false);
 
     const [pageable, setPageable] = useState<Pageable>({
         page: 0,
@@ -61,6 +64,17 @@ export default function FolderList(){
         console.log('useEffect triggered with pageable:', pageable, 'and params:', params);
         loadFolders();
     }, [pageable, params]);
+
+    const handleOpenModal = () => {
+        setOpenModal(true);
+    };
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    };
+
+    const handleSubmit = async (folder: FolderRequest) => {
+
+    };
 
     const columns: GridColDef<FolderResponse>[] = [
         {
@@ -120,6 +134,9 @@ export default function FolderList(){
                         </IconButton>
                     </Tooltip>
                 </Box>
+                <Button variant="contained" color="primary" onClick={handleOpenModal}>
+                    Create Folder
+                </Button>
             </Typography>
             <Divider sx={{ m: 2 }} />
             <Divider sx={{ m: 2 }} />
@@ -178,7 +195,11 @@ export default function FolderList(){
                 }}
                 pageSizeOptions={[10, 25, 50, 100]}
             />
-            
+            <FolderForm 
+                open={openModal}
+                onClose={handleCloseModal}
+                onSubmit={handleSubmit}
+            />
         </Box>
     );
 };

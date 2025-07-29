@@ -9,11 +9,13 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 type PaginationSelectProjectProps = {
+    label?: string;
     value?: string;
     onChange: (e: SelectChangeEvent<string>, child: ReactNode) => void;
 };
 
 export function PaginationSelectProject({
+    label = "Select Folder",
     value,
     onChange,
 }: PaginationSelectProjectProps) {
@@ -149,7 +151,7 @@ export function PaginationSelectProject({
                     pointerEvents: 'none'
                 }}
             >
-                Folder
+                {label}
             </InputLabel>
             <Stack spacing={2} direction={"row"} sx={{ width: '100%' }} alignItems={"center"}>
                 <Autocomplete 
