@@ -52,6 +52,11 @@ public class FileService implements IFileService{
         rollbackFor = {TechnicalException.class}
     )
     public void createFile(MultipartFile multipartFile, FileRequest request) {
+        
+        if (multipartFile == null || multipartFile.isEmpty()) {
+            throw new TechnicalException("The file cannot be null or empty", HttpStatus.BAD_REQUEST);
+        }
+        
         log.info("Creating file with name: {}", request.name());
         Folder folder = folderRepository.findById(UUID.fromString(request.folderId()))
             .orElseThrow(() -> new TechnicalException("Folder not found", HttpStatus.NOT_FOUND));
